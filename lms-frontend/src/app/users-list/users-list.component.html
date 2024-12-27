@@ -1,0 +1,50 @@
+<div class="container mt-4">
+  <h2 class="text-center">User List</h2>
+  <div *ngIf="!users || users.length === 0" class="text-center my-4">
+    <p class="text-muted">Loading users...</p>
+  </div>
+
+  <table
+    *ngIf="users.length > 0"
+    class="table table-hover table-bordered table-striped"
+  >
+    <thead class="table-dark text-center">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Username</th>
+        <th scope="col">Roles</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users; let i = index" class="text-center">
+        <th scope="row">{{ i + 1 }}</th>
+        <td>{{ user.name }}</td>
+        <td>{{ user.username }}</td>
+        <td>
+          <span *ngFor="let r of user.role; let j = index">
+            <span class="badge bg-primary me-1">{{ r.roleName }}</span>
+          </span>
+        </td>
+        <td>
+          <button
+            class="btn btn-sm btn-info me-1"
+            (click)="updateUser(user.userId)"
+            title="Edit User"
+          >
+            ✏️ Edit
+          </button>
+          <button
+            *ngIf="hasRole(user, 'User')"
+            class="btn btn-sm btn-success"
+            (click)="userDetails(user.userId)"
+            title="View History"
+          >
+            👁️ View
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
