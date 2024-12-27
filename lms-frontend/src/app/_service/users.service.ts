@@ -6,24 +6,25 @@ import { Users } from '../_model/users';
 import { UserAuthService } from './user-auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsersService {
-
-  private baseURL = "http://localhost:8080/admin/users";
-  requestHeader = new HttpHeaders(
-    { 'No-Auth': 'True' }
-  );
+  private baseURL = 'http://localhost:8080/admin/users';
+  requestHeader = new HttpHeaders({ 'No-Auth': 'True' });
 
   constructor(
     private httpClient: HttpClient,
     private userAuthService: UserAuthService
-  ) { }
+  ) {}
 
   public login(loginData: NgForm) {
-    return this.httpClient.post("http://localhost:8080/authenticate", loginData, {
-      headers: this.requestHeader,
-    });
+    return this.httpClient.post(
+      'http://localhost:8080/authenticate',
+      loginData,
+      {
+        headers: this.requestHeader,
+      }
+    );
   }
 
   public roleMatch(allowedRoles: any): boolean {
@@ -61,5 +62,4 @@ export class UsersService {
   updateUser(userId: number, user: Users): Observable<Object> {
     return this.httpClient.put(`${this.baseURL}/${userId}`, user);
   }
-
 }

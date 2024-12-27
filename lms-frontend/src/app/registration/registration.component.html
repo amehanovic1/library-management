@@ -39,13 +39,9 @@
 
     <div class="form-group">
       <label style="margin-bottom: 10px"> Role </label>
-      <select
-        class="form-control"
-        style="margin-bottom: 10px"
-        id="role"
-        [(ngModel)]="user.role[0].roleName"
-        name="role"
-      >
+      <select class="form-control" (change)="onRoleChange($event)" required>
+        <option value="" disabled selected>Choose role</option>
+        <!-- Default opcija -->
         <option value="Admin">Admin</option>
         <option value="User">User</option>
       </select>

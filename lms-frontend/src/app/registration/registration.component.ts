@@ -10,13 +10,14 @@ import { UsersService } from '../_service/users.service';
 })
 export class RegistrationComponent implements OnInit {
   user: Users = new Users();
+
   constructor(private usersService: UsersService, private router: Router) {}
 
   ngOnInit(): void {}
 
   saveUser() {
     if (!this.user.role || this.user.role.length === 0) {
-      this.user.role = [{ roleName: '' }];
+      this.user.role = [{ roleName: 'User' }];
     }
 
     this.usersService.createUser(this.user).subscribe(
@@ -24,22 +25,28 @@ export class RegistrationComponent implements OnInit {
         console.log('OVO JE DODANI USER:', data);
         this.goToUsersList();
       },
-      (error) => console.log(error)
+      (error) => console.error('Error creating user:', error)
     );
+  }
+
+  onRoleChange(event: Event) {
+    const selectedRole = (event.target as HTMLSelectElement).value;
+    this.user.role = [{ roleName: selectedRole }];
+  }
+
+  onSubmit() {
+    if (!this.user.role || this.user.role.length === 0) {
+      this.user.role = [{ roleName: 'User' }];
+    }
+
+    if (!this.user.role[0].roleName) {
+      this.user.role[0].roleName = 'User';
+    }
+
+    this.saveUser();
   }
 
   goToUsersList() {
     this.router.navigate(['/users']);
-  }
-
-  onSubmit() {
-    console.log(this.user);
-
-    // Osiguraj da je role niz s barem jednim objektom
-    if (!this.user.role || this.user.role.length === 0) {
-      this.user.role = [{ roleName: 'User' }]; // Default role ako nije uneseno
-    }
-
-    this.saveUser();
   }
 }
