@@ -4,21 +4,22 @@ import { Borrow } from '../_model/borrow';
 import { BooksService } from '../_service/books.service';
 import { BorrowService } from '../_service/borrow.service';
 import { UserAuthService } from '../_service/user-auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-borrow-book',
   templateUrl: './borrow-book.component.html',
-  styleUrls: ['./borrow-book.component.css']
+  styleUrls: ['./borrow-book.component.css'],
 })
 export class BorrowBookComponent implements OnInit {
-
   books: Books[];
 
   constructor(
     private booksService: BooksService,
     private userAuthService: UserAuthService,
     private borrowService: BorrowService,
-  ) { }
+    private router: Router
+  ) {}
 
   userId = this.userAuthService.getUserId();
 
@@ -27,7 +28,7 @@ export class BorrowBookComponent implements OnInit {
   }
 
   private getBooks() {
-    this.booksService.getBooksList().subscribe(data =>{
+    this.booksService.getBooksList().subscribe((data) => {
       this.books = data;
     });
   }
@@ -38,10 +39,14 @@ export class BorrowBookComponent implements OnInit {
     this.borrow.bookId = bookId;
     this.borrow.userId = this.userId;
     console.log(this.borrow);
-    this.borrowService.borrowBook(this.borrow).subscribe(data => {
-      console.log(data);
-      this.getBooks();
-    },
-    error => console.log(error));
+    this.borrowService.borrowBook(this.borrow).subscribe(
+      (data) => {
+        console.log(data);
+        // this.getBooks();
+
+        this.router.navigate(['/return-book']);
+      },
+      (error) => console.log(error)
+    );
   }
 }

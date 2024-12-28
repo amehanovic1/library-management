@@ -29,7 +29,7 @@ export class UsersService {
 
   public roleMatch(allowedRoles: string[]): boolean {
     const userRoles: any[] = this.userAuthService.getRoles(); // Dohvaćamo korisničke uloge
-  
+
     // Ako postoje uloge korisnika
     if (userRoles != null && userRoles.length > 0) {
       // Provjera svake uloge korisnika
@@ -40,10 +40,9 @@ export class UsersService {
         }
       }
     }
-  
+
     return false; // Ako nije pronašao podudaranje, vraća false
   }
-  
 
   getUsersList(): Observable<Users[]> {
     return this.httpClient.get<Users[]>(`${this.baseURL}`);
@@ -61,8 +60,9 @@ export class UsersService {
     return this.httpClient.put(`${this.baseURL}/${userId}`, user);
   }
 
-  deleteUser(userId: number): Observable<Object> {
-    return this.httpClient.delete(`${this.baseURL}/${userId}`);
+  deleteUser(userId: number): Observable<any> {
+    return this.httpClient.delete(`${this.baseURL}/users/${userId}`, {
+      responseType: 'text',
+    });
   }
-  
 }

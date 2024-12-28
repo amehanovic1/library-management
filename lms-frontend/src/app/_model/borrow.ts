@@ -1,8 +1,9 @@
 export class Borrow {
-    borrowId: number;
-    bookId: number;
-    userId: number;
-    issueDate: Date;
-    returnDate: Date;
-    dueDate: Date;
+  bookName: string;
+  borrowId: number;
+  bookId: number;
+  userId: number;
+  issueDate: Date;
+  returnDate: Date;
+  dueDate: Date;
 }
