@@ -6,19 +6,17 @@ import { UsersService } from '../_service/users.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-
   constructor(
-    private userAuthService: UserAuthService, 
+    private userAuthService: UserAuthService,
     private router: Router,
-    public userService: UsersService,
-  ) { }
+    public userService: UsersService
+  ) {}
 
   name = this.userAuthService.getName();
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   public isLoggedIn() {
     console.log(this.name);

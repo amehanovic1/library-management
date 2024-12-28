@@ -1,50 +1,61 @@
 <div class="container mt-4">
-  <h2 class="text-center">User List</h2>
-  <div *ngIf="!users || users.length === 0" class="text-center my-4">
-    <p class="text-muted">Loading users...</p>
+  <h2 class="text-center mb-4">User List</h2>
+
+  <!-- Loading message -->
+  <div
+    *ngIf="!users || users.length === 0"
+    class="d-flex justify-content-center align-items-center py-5"
+  >
+    <p class="text-muted fs-4">Loading users...</p>
   </div>
 
-  <table
-    *ngIf="users.length > 0"
-    class="table table-hover table-bordered table-striped"
-  >
-    <thead class="table-dark text-center">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Name</th>
-        <th scope="col">Username</th>
-        <th scope="col">Roles</th>
-        <th scope="col">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users; let i = index" class="text-center">
-        <th scope="row">{{ i + 1 }}</th>
-        <td>{{ user.name }}</td>
-        <td>{{ user.username }}</td>
-        <td>
-          <span *ngFor="let r of user.role; let j = index">
-            <span class="badge bg-primary me-1">{{ r.roleName }}</span>
-          </span>
-        </td>
-        <td>
-          <button
-            class="btn btn-sm btn-info me-1"
-            (click)="updateUser(user.userId)"
-            title="Edit User"
-          >
-            ✏️ Edit
-          </button>
-          <button
-            *ngIf="hasRole(user, 'User')"
-            class="btn btn-sm btn-success"
-            (click)="userDetails(user.userId)"
-            title="View History"
-          >
-            👁️ View
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- User Table -->
+  <div class="table-responsive">
+    <table
+      *ngIf="users.length > 0"
+      class="table table-hover align-middle bg-white"
+    >
+      <thead class="bg-primary text-white text-center">
+        <tr>
+          <th scope="col" class="p-3">#</th>
+          <th scope="col" class="p-3">Name</th>
+          <th scope="col" class="p-3">Username</th>
+          <th scope="col" class="p-3">Roles</th>
+          <th scope="col" class="p-3">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users; let i = index" class="text-center">
+          <th scope="row" class="p-3">{{ i + 1 }}</th>
+          <td class="p-3">{{ user.name }}</td>
+          <td class="p-3">{{ user.username }}</td>
+          <td class="p-3">
+            <span *ngFor="let r of user.role" class="badge bg-success me-1">
+              {{ r.roleName }}
+            </span>
+          </td>
+          <td class="p-3">
+            <button
+              class="btn btn-outline-info btn-sm me-2"
+              (click)="updateUser(user.userId)"
+              title="Edit User"
+            >
+              Edit
+            </button>
+            <button
+              *ngIf="hasRole(user, 'User')"
+              class="btn btn-outline-success btn-sm me-2"
+              (click)="userDetails(user.userId)"
+              title="View History"
+            >
+              View
+            </button>
+            <button class="btn btn-outline-danger btn-sm" title="Delete User">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

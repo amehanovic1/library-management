@@ -1,0 +1,15 @@
+.table {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lagana sjenka */
+  border-radius: 8px; /* Zaobljeni uglovi */
+  overflow: hidden; /* Sprečava sadržaj da izlazi iz okvira tabele */
+  background-color: #c9c9cb; /* Garantuje bijelu pozadinu */
+}
+
+.table th,
+.table td {
+  vertical-align: middle; /* Sadržaj u centru ćelija */
+}
+
+.table thead {
+  font-size: 1.1rem;
+}
