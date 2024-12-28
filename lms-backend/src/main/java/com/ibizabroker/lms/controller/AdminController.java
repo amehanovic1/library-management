@@ -36,12 +36,9 @@ public class AdminController {
             throw new IllegalArgumentException("At least one role must be assigned to the user.");
         }
 
-        // Skup za pohranu validiranih rola
         Set<Role> rolesToAssign = new HashSet<>();
 
-        // Prođi kroz korisnički unesene role
         for (Role incomingRole : user.getRole()) {
-            // Dohvati rolu iz baze prema nazivu (pretpostavljamo da postoji `RoleRepository`)
             Role roleFromDb = roleRepository.findByRoleName(incomingRole.getRoleName())
                     .orElseThrow(() -> new NotFoundException("Role not found: " + incomingRole.getRoleName()));
             rolesToAssign.add(roleFromDb);
@@ -79,10 +76,34 @@ public class AdminController {
         Users user = usersRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id "+ id +" does not exist."));
 
         user.setName(userDetails.getName());
-        user.setRole(userDetails.getRole());
         user.setUsername(userDetails.getUsername());
+
+        if (userDetails.getRole() == null || userDetails.getRole().isEmpty()) {
+            throw new IllegalArgumentException("At least one role must be assigned to the user.");
+        }
+        Set<Role> rolesToAssign = new HashSet<>();
+        for (Role incomingRole : userDetails.getRole()) {
+            // Provjeri postoji li ova rola u bazi
+            Role roleFromDb = roleRepository.findByRoleName(incomingRole.getRoleName())
+                    .orElseThrow(() -> new NotFoundException("Role not found: " + incomingRole.getRoleName()));
+            rolesToAssign.add(roleFromDb);
+        }
+
+        user.setRole(rolesToAssign);
 
         Users updatedUser = usersRepository.save(user);
         return ResponseEntity.ok(updatedUser);
     }
+
+    @PreAuthorize("hasRole('Admin')")
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
+        Users user = usersRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User with id " + id + " does not exist."));
+
+        usersRepository.delete(user);
+
+        return ResponseEntity.ok("User deleted successfully.");
+    }
+
 }

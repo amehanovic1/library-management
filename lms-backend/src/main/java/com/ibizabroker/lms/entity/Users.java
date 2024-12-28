@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@Table(name = "user")
 public class Users {
 
     @Id
@@ -15,7 +16,7 @@ public class Users {
     private String username;
     private String name;
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "USER_ROLE",
             joinColumns = {
                     @JoinColumn(name = "USER_ID")
@@ -26,5 +27,14 @@ public class Users {
     )
     private Set<Role> role;
 
+    public Users(String username, String name, String password, Set<Role> role) {
+        this.username = username;
+        this.name = name;
+        this.password = password;
+        this.role = role;
+    }
+
+    public Users() {
+    }
 }
 

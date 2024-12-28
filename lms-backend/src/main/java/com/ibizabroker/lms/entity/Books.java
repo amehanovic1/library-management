@@ -6,15 +6,22 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "Books")
+@Table(name = "book")
 public class Books {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Integer bookId;
     String bookName;
-    String bookAuthor;
-    String bookGenre;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
+    Author author;
+
+    @ManyToOne
+    @JoinColumn(name = "genre_id", nullable = false)
+    Genre genre;
+
     Integer noOfCopies;
 
     public void borrowBook() {
@@ -25,4 +32,6 @@ public class Books {
         this.noOfCopies++;
     }
 
+    public Books() {
+    }
 }
