@@ -38,6 +38,12 @@ public class BooksController {
         return books.stream().map(BookDTO::new).collect(Collectors.toList());
     }
 
+    @GetMapping("/books-user")
+    public List<BookDTO> getAllBooksForUser(){
+        List<Books> books = booksRepository.findAll();
+        return books.stream().map(BookDTO::new).collect(Collectors.toList());
+    }
+
     @GetMapping("/books/{id}")
     public ResponseEntity<BookDTO> getBookById(@PathVariable Integer id) {
         Books book = booksRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id "+ id +" does not exist."));

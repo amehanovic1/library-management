@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@CrossOrigin("http://localhost:4200/")
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -31,7 +30,6 @@ public class AdminController {
 
     @PostMapping("/users")
     public Users addUserByAdmin(@RequestBody Users user) {
-        // Provjeri postoje li role u korisnikovom unosu
         if (user.getRole() == null || user.getRole().isEmpty()) {
             throw new IllegalArgumentException("At least one role must be assigned to the user.");
         }
@@ -43,16 +41,12 @@ public class AdminController {
                     .orElseThrow(() -> new NotFoundException("Role not found: " + incomingRole.getRoleName()));
             rolesToAssign.add(roleFromDb);
         }
-
-        // Postavi validirane role korisniku
         user.setRole(rolesToAssign);
 
-        // Šifriraj lozinku korisnika
         String password = user.getPassword();
         String encryptPassword = passwordEncoder.encode(password);
         user.setPassword(encryptPassword);
 
-        // Spremi korisnika u bazu
         return usersRepository.save(user);
     }
 
