@@ -28,10 +28,10 @@ export class LoginComponent implements OnInit {
         this.userAuthSerivce.setName(response.user.name);
 
         const role = response.user.role[0].roleName;
-        if(role === 'Admin') {
+        if(role === 'Admin' || role === 'Staff') {
           this.router.navigate(['/books']);
         } else {
-          this.router.navigate(['/borrow-book']) //update later
+          this.router.navigate(['/borrow-book']) 
         }
       },
       (error)=>{

@@ -2,7 +2,7 @@
 <table class="table table-info table-striped">
     <thead>
         <tr>
-            <th> User ID </th>
+            <th> User </th>
             <th> Issue Date </th>
             <th> Return Date </th>
         </tr>
@@ -10,7 +10,7 @@
     <tbody>
         <tr *ngFor="let borrower of borrow">
             <!-- <td> {{ getUserData(borrower.userId) }} </td> -->
-            <td> {{ borrower.userId }} </td>
+            <td> {{ borrower.username }} </td>
             <td> {{ borrower.issueDate }} </td>
             <div *ngIf="borrower.returnDate != null">
                 <td> {{ borrower.returnDate }} </td>

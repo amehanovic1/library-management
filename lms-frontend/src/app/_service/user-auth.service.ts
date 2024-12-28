@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { jwtDecode } from 'jwt-decode';  // Importanje jwt-decode
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,15 @@ export class UserAuthService {
 
   public getToken(): string {
     return localStorage.getItem('jwtToken')!;
+  }
+
+  public getAllRolesFromToken(): string[] {
+    const token = this.getToken();
+    if (token) {
+      const decodedToken = jwtDecode<any>(token); // Dekodiranje JWT tokena
+      return decodedToken.roles || []; // Vraća sve uloge ili prazan niz ako nema
+    }
+    return [];
   }
 
   public setUserId(userId: number) {

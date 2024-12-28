@@ -12,7 +12,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./borrow-book.component.css'],
 })
 export class BorrowBookComponent implements OnInit {
-  books: Books[];
+  books: Books[] = [];
+  borrowedStatus: { [bookId: number]: boolean } = {};
 
   constructor(
     private booksService: BooksService,
@@ -30,23 +31,43 @@ export class BorrowBookComponent implements OnInit {
   private getBooks() {
     this.booksService.getBooksList().subscribe((data) => {
       this.books = data;
+      this.books.forEach((book) => {
+        this.checkBorrowStatus(book.bookId);
+      });
     });
+  }
+
+  private checkBorrowStatus(bookId: number) {
+    this.borrowService
+      .checkBorrowStatus(this.userId, bookId)
+      .subscribe((status) => {
+        this.borrowedStatus[bookId] = status;
+      });
   }
 
   borrow: Borrow = new Borrow();
 
   borrowBook(bookId: number) {
+    if (this.borrowedStatus[bookId]) {
+      alert('You have already borrowed this book.');
+      return;
+    }
+
     this.borrow.bookId = bookId;
     this.borrow.userId = this.userId;
-    console.log(this.borrow);
+
     this.borrowService.borrowBook(this.borrow).subscribe(
       (data) => {
-        console.log(data);
-        // this.getBooks();
-
-        this.router.navigate(['/return-book']);
+        alert('Book borrowed successfully!');
+        this.checkBorrowStatus(bookId); // Ažuriraj status nakon posudbe
+        this.router.navigate(['/return-book']).then(() => {
+          window.location.reload();
+        });
       },
-      (error) => console.log(error)
+      (error) => {
+        console.log(error);
+        alert('Failed to borrow the book. Please try again.');
+      }
     );
   }
 }

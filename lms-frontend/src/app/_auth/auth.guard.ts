@@ -9,31 +9,38 @@ import { UsersService } from '../_service/users.service';
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private userAuthService: UserAuthService,
+  constructor(
+    private userAuthService: UserAuthService,
     private router: Router,
-    private userService: UsersService
+    private userService: UsersService,
   ) {}
   
   canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-
-    if(this.userAuthService.getToken() !== null) {
-      const role = route.data["roles"] as Array<string>;
-
-      if(role) {
-        const match = this.userService.roleMatch(role);
-
-        if(match) {
-          return true;
+    state: RouterStateSnapshot
+  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+  
+    const token = this.userAuthService.getToken();
+    console.log('Token in canActivate:', token);  // Provjera tokena
+  
+    if (token !== null) {
+      const roles = route.data["roles"] as Array<string>;
+      console.log('Allowed Roles from Route:', roles);  // Provjera uloga iz rute
+  
+      if (roles) {
+        const match = this.userService.roleMatch(roles);
+        if (match) {
+          return true; // Korisnik ima odgovarajuću ulogu
         } else {
+          console.log('Role match failed, redirecting to forbidden');
           this.router.navigate(['/forbidden']);
           return false;
         }
       }
     }
-
+  
     this.router.navigate(['/login']);
     return false;
   }
+  
 }

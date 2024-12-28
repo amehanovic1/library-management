@@ -1,23 +1,29 @@
 <h2>List of available books in the library</h2>
 <table class="table table-success table-striped">
-    <thead>
-        <tr>
-            <th> Name </th>
-            <th> Author </th>
-            <th> Genre </th>
-            <th> Number of copies available </th>
-            <th> Actions </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let book of books">
-            <td> {{ book.bookName }} </td>
-            <td> {{ book.authorName }} </td>
-            <td> {{ book.genreName }} </td>
-            <td> {{ book.noOfCopies }} </td>
-            <td>
-                <button (click) = "borrowBook(book.bookId)" class="btn btn-success"> Borrow </button>
-            </td>
-        </tr>
-    </tbody>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Author</th>
+      <th>Genre</th>
+      <th>Number of copies available</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let book of books">
+      <td>{{ book.bookName }}</td>
+      <td>{{ book.authorName }}</td>
+      <td>{{ book.genreName }}</td>
+      <td>{{ book.noOfCopies }}</td>
+      <td>
+        <button
+          (click)="borrowBook(book.bookId)"
+          class="btn btn-success"
+          [disabled]="borrowedStatus[book.bookId]"
+        >
+          {{ borrowedStatus[book.bookId] ? 'Already Borrowed' : 'Borrow' }}
+        </button>
+      </td>
+    </tr>
+  </tbody>
 </table>

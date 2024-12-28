@@ -31,4 +31,10 @@ export class BorrowService {
   getBookBorrowHistory(bookId: number): Observable<Borrow[]> {
     return this.httpClient.get<Borrow[]>(`${this.baseURL}/book/${bookId}`);
   }
+
+  checkBorrowStatus(userId: number, bookId: number): Observable<boolean> {
+    return this.httpClient.get<boolean>(
+      `${this.baseURL}/check-borrow-status?userId=${userId}&bookId=${bookId}`
+    );
+  }
 }

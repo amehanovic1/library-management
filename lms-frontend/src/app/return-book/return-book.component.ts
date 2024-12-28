@@ -45,10 +45,27 @@ export class ReturnBookComponent implements OnInit {
   brw: Borrow = new Borrow();
   public returnBook(borrowId: number) {
     this.brw.borrowId = borrowId;
-    this.borrowService.returnBook(this.brw).subscribe(data => {
-      console.log(data);
-    },
-    error => console.log(error));
+    this.borrowService.returnBook(this.brw).subscribe(
+      (data) => {
+        console.log(data);
+        // Prikazivanje alert-a
+        alert('Book returned successfully!');
+        
+        // Ponovno učitavanje stranice
+        window.location.reload();
+      },
+      (error) => {
+        console.log(error);
+        // Prikazivanje alert-a u slučaju greške
+        alert('Failed to return the book. Please try again.');
+      }
+    );
+  }
+  
+
+  getBookName(bookId: number): string {
+    const book = this.books.find(b => b.bookId === bookId);
+    return book ? book.bookName : 'Unknown';
   }
 
 }

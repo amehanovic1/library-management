@@ -28,21 +28,25 @@ export class UsersService {
   }
 
   public roleMatch(allowedRoles: string[]): boolean {
-    const userRoles: any[] = this.userAuthService.getRoles(); // Dohvaćamo korisničke uloge
-
-    // Ako postoje uloge korisnika
-    if (userRoles != null && userRoles.length > 0) {
-      // Provjera svake uloge korisnika
-      for (let i = 0; i < userRoles.length; i++) {
-        // Provjera da li korisnik ima neku od dozvoljenih uloga
-        if (allowedRoles.includes(userRoles[i].roleName)) {
-          return true; // Ako je našao podudaranje, vrati true
+    const userRoles: string[] = this.userAuthService.getAllRolesFromToken(); // Dohvati uloge iz tokena
+    console.log('User Roles:', userRoles);
+  
+    if (userRoles && userRoles.length > 0) {
+      const cleanedUserRoles = userRoles.map(role => role.replace('ROLE_', ''));
+      console.log('Cleaned User Roles:', cleanedUserRoles);
+  
+      // Provjera da li korisnik ima barem jednu od dopuštenih uloga
+      for (let i = 0; i < cleanedUserRoles.length; i++) {
+        if (allowedRoles.includes(cleanedUserRoles[i])) {
+          return true; // Ako korisnik ima neku od dopuštenih uloga
         }
       }
     }
-
-    return false; // Ako nije pronašao podudaranje, vraća false
+  
+    return false; // Ako nema odgovarajuće uloge
   }
+  
+  
 
   getUsersList(): Observable<Users[]> {
     return this.httpClient.get<Users[]>(`${this.baseURL}`);
@@ -61,7 +65,7 @@ export class UsersService {
   }
 
   deleteUser(userId: number): Observable<any> {
-    return this.httpClient.delete(`${this.baseURL}/users/${userId}`, {
+    return this.httpClient.delete(`${this.baseURL}/${userId}`, {
       responseType: 'text',
     });
   }

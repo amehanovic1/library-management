@@ -35,20 +35,12 @@ export class UserDetailsComponent implements OnInit {
     });
 
     this.getBorrowedByUser(this.id);
-    console.log('KNJIGA: ', this.borrow);
+    //console.log('KNJIGA: ', this.borrow);
   }
 
   private getBorrowedByUser(userId: number) {
     this.borrowService.getBooksBorrowedByUser(userId).subscribe((data) => {
       this.borrow = data;
-
-      this.borrow.forEach((borrow) => {
-        this.bookService
-          .getBookNameById(borrow.bookId)
-          .subscribe((bookName) => {
-            borrow['bookName'] = bookName;
-          });
-      });
 
       console.log(data);
     });
