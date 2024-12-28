@@ -112,4 +112,11 @@ public class BooksController {
         response.put("deleted", Boolean.TRUE);
         return ResponseEntity.ok(response);
     }
+
+    @PreAuthorize("hasRole('Admin') or hasRole('Staff')")
+    @GetMapping("/books/name/{id}")
+    public ResponseEntity<String> getBookNameById(@PathVariable Integer id) {
+        Books book = booksRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id " + id + " does not exist."));
+        return ResponseEntity.ok(book.getBookName());
+    }
 }

@@ -44,16 +44,19 @@ export class UsersListComponent implements OnInit {
   }
 
   deleteUser(userId: number) {
-    if (confirm("Are you sure you want to delete this user?")) {
-      this.usersService.deleteUser(userId).subscribe(
-        (response) => {
-          console.log(response);
-          this.getUsers(); // Reload the users list after deletion
-        },
-        (error) => {
-          console.error('Error deleting user:', error);
-        }
-      );
-    }
+    this.usersService.deleteUser(userId).subscribe(
+      (response) => {
+        console.log('User deleted:', response);
+
+        // Ukloni obrisanog korisnika iz lokalne liste bez refetch-a
+        this.users = this.users.filter((user) => user.userId !== userId);
+
+        // Ručno osveži prikaz
+        this.cdRef.detectChanges();
+      },
+      (error) => {
+        console.error('Error deleting user:', error);
+      }
+    );
   }
 }
