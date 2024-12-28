@@ -1,17 +1,21 @@
-<h2>Book List</h2>
-<table class="table table-success table-striped">
-    <thead>
-        <tr>
-            <th> Name </th>
-            <th> Author </th>
-            <th> Genre </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let book of books">
-            <td> {{ book.bookName }} </td>
-            <td> {{ book.authorName }} </td>
-            <td> {{ book.genreName }} </td>
-        </tr>
-    </tbody>
-</table>
+<h2 class="text-center mb-4">Book List</h2>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+  <div *ngFor="let book of books" class="col">
+    <div class="card shadow-sm h-100">
+      <!-- Replace the generic book image URL below -->
+      <img src="assets/book-placeholder.jpg" class="card-img-top" alt="Book Cover">
+      <div class="card-body">
+        <h5 class="card-title">{{ book.bookName }}</h5>
+        <p class="card-text"><strong>Author:</strong> {{ book.authorName }}</p>
+        <p class="card-text"><strong>Genre:</strong> {{ book.genreName }}</p>
+        <a class="btn btn-primary" (click)="viewDetails()">View Details</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="message" class="alert alert-warning mt-4">
+    {{ message }}
+  </div>

@@ -31,4 +31,8 @@ export class BooksService {
   deleteBook(bookId: number): Observable<Object> {
     return this.httpClient.delete(`${this.baseURL}/${bookId}`);
   }
+
+  getBooksUserList(): Observable<Books[]> {
+    return this.httpClient.get<Books[]>("http://localhost:8080/admin/books-user");
+  }
 }
