@@ -6,9 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @Component
@@ -46,8 +44,12 @@ public class JwtUtil {
     }
 
     public String generateToken(UserDetails userDetails) {
-
         Map<String, Object> claims = new HashMap<>();
+
+        // Add roles to the claims map
+        Set<String> roles = new HashSet<>();
+        userDetails.getAuthorities().forEach(authority -> roles.add(authority.getAuthority()));
+        claims.put("roles", roles);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -57,4 +59,5 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();
     }
+
 }

@@ -5,14 +5,17 @@ import com.ibizabroker.lms.dao.BorrowRepository;
 import com.ibizabroker.lms.dao.UsersRepository;
 import com.ibizabroker.lms.entity.Books;
 import com.ibizabroker.lms.entity.Borrow;
+import com.ibizabroker.lms.entity.BorrowDTO;
 import com.ibizabroker.lms.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RestController
@@ -29,28 +32,41 @@ public class BorrowController {
     private BooksRepository booksRepository;
 
     @PostMapping
-    public String borrowBook(@RequestBody Borrow borrow) {
-        Users user = usersRepository.findById(borrow.getUserId()).get();
-        Books book = booksRepository.findById(borrow.getBookId()).get();
+    public ResponseEntity<BorrowDTO> borrowBook(@RequestBody Borrow borrow) {
+        Users user = usersRepository.findById(borrow.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + borrow.getUserId()));
+        Books book = booksRepository.findById(borrow.getBookId())
+                .orElseThrow(() -> new RuntimeException("Book not found with ID: " + borrow.getBookId()));
 
         if (book.getNoOfCopies() < 1) {
-            return "The book \"" + book.getBookName() + "\" is out of stock!";
+            throw new RuntimeException("The book \"" + book.getBookName() + "\" is out of stock!");
         }
 
         book.borrowBook();
         booksRepository.save(book);
 
         Date currentDate = new Date();
-        Date overdueDate = new Date();
         Calendar c = Calendar.getInstance();
-        c.setTime(overdueDate);
+        c.setTime(currentDate);
         c.add(Calendar.DATE, 7);
-        overdueDate = c.getTime();
+        Date dueDate = c.getTime();
+
         borrow.setIssueDate(currentDate);
-        borrow.setDueDate(overdueDate);
+        borrow.setDueDate(dueDate);
         borrowRepository.save(borrow);
-        return user.getName() + " has borrowed one copy of \"" + book.getBookName() + "\"!";
+
+
+        BorrowDTO borrowDTO = new BorrowDTO();
+        borrowDTO.setBorrowId(borrow.getBorrowId());
+        borrowDTO.setBookId(book.getBookId());
+        borrowDTO.setBookName(book.getBookName());
+        borrowDTO.setUserId(user.getUserId());
+        borrowDTO.setIssueDate(currentDate);
+        borrowDTO.setDueDate(dueDate);
+
+        return ResponseEntity.ok(borrowDTO);
     }
+
 
     @GetMapping
     public List<Borrow> getAllBorrow() {
@@ -71,14 +87,57 @@ public class BorrowController {
     }
 
     @GetMapping("user/{id}")
-    public List<Borrow> booksBorrowedByUser(@PathVariable Integer id) {
-        return borrowRepository.findByUserId(id);
+    public List<BorrowDTO> booksBorrowedByUser(@PathVariable Integer id) {
+        return borrowRepository.findByUserId(id).stream().map(borrow -> {
+            BorrowDTO dto = new BorrowDTO();
+            dto.setBorrowId(borrow.getBorrowId());
+            dto.setBookId(borrow.getBookId());
+            dto.setBookName(booksRepository.findById(borrow.getBookId())
+                    .map(Books::getBookName).orElse("Unknown"));
+            dto.setUserId(borrow.getUserId());
+            dto.setIssueDate(borrow.getIssueDate());
+            dto.setReturnDate(borrow.getReturnDate());
+            dto.setDueDate(borrow.getDueDate());
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     @GetMapping("book/{id}")
-    public List<Borrow> bookBorrowHistory(@PathVariable Integer id) {
-        return borrowRepository.findByBookId(id);
+    public List<BorrowDTO> bookBorrowHistory(@PathVariable Integer id) {
+        List<Borrow> borrowList = borrowRepository.findByBookId(id);
+
+
+        List<BorrowDTO> borrowDTOList = borrowList.stream().map(borrow -> {
+            BorrowDTO borrowDTO = new BorrowDTO();
+            borrowDTO.setBorrowId(borrow.getBorrowId());
+            borrowDTO.setBookId(borrow.getBookId());
+            borrowDTO.setBookName(booksRepository.findById(borrow.getBookId())
+                    .map(Books::getBookName).orElse("Unknown"));
+            borrowDTO.setUserId(borrow.getUserId());
+            borrowDTO.setIssueDate(borrow.getIssueDate());
+            borrowDTO.setReturnDate(borrow.getReturnDate());
+            borrowDTO.setDueDate(borrow.getDueDate());
+
+
+            Users user = usersRepository.findById(borrow.getUserId()).orElse(null);
+            if (user != null) {
+                borrowDTO.setUsername(user.getUsername());
+            }
+
+            return borrowDTO;
+        }).collect(Collectors.toList());
+
+        return borrowDTOList;
     }
+
+    @GetMapping("/check-borrow-status")
+    public ResponseEntity<Boolean> checkBorrowStatus(
+            @RequestParam Integer userId,
+            @RequestParam Integer bookId) {
+        boolean alreadyBorrowed = borrowRepository.existsByUserIdAndBookIdAndReturnDateIsNull(userId, bookId);
+        return ResponseEntity.ok(alreadyBorrowed);
+    }
+
 
 
 //    @Autowired

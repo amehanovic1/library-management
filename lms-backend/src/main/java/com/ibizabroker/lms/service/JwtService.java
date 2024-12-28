@@ -37,11 +37,12 @@ public class JwtService implements UserDetailsService {
         authenticate(username, password);
 
         UserDetails userDetails = loadUserByUsername(username);
-        String newGeneratedToken = jwtUtil.generateToken(userDetails);
+        String newGeneratedToken = jwtUtil.generateToken(userDetails); // Now includes roles in the token
 
         Users user = userDao.findByUsername(username).get();
         return new JwtResponse(user, newGeneratedToken);
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
