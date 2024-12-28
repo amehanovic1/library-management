@@ -9,6 +9,7 @@ import com.ibizabroker.lms.entity.BorrowDTO;
 import com.ibizabroker.lms.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,7 @@ public class BorrowController {
     private BooksRepository booksRepository;
 
     @PostMapping
+    @PreAuthorize("hasRole('Member')")
     public ResponseEntity<BorrowDTO> borrowBook(@RequestBody Borrow borrow) {
         Users user = usersRepository.findById(borrow.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + borrow.getUserId()));
@@ -74,6 +76,7 @@ public class BorrowController {
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('Member')")
     public Borrow returnBook(@RequestBody Borrow borrow) {
         Borrow borrowBook = borrowRepository.findById(borrow.getBorrowId()).get();
         Books book = booksRepository.findById(borrowBook.getBookId()).get();
@@ -131,6 +134,7 @@ public class BorrowController {
     }
 
     @GetMapping("/check-borrow-status")
+    @PreAuthorize("hasRole('Member')")
     public ResponseEntity<Boolean> checkBorrowStatus(
             @RequestParam Integer userId,
             @RequestParam Integer bookId) {

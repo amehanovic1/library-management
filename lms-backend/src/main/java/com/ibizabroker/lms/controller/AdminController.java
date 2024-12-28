@@ -29,6 +29,7 @@ public class AdminController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/users")
+    @PreAuthorize("hasRole('Admin')")
     public Users addUserByAdmin(@RequestBody Users user) {
         if (user.getRole() == null || user.getRole().isEmpty()) {
             throw new IllegalArgumentException("At least one role must be assigned to the user.");
