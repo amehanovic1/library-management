@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./lms-backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://avnadmin:AVNS_ngO5owcj5GLk11dQdfr@mysql-11933ebb-ts-libmanage.b.aivencloud.com:24829/defaultdb?ssl-mode=REQUIRED
+      SPRING_DATASOURCE_USERNAME: avnadmin
+      SPRING_DATASOURCE_PASSWORD: AVNS_ngO5owcj5GLk11dQdfr
+    networks:
+      - lms_network
+
+  frontend:
+    build:
+      context: ./lms-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - lms_network
+
+networks:
+  lms_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "10.0.1.0/24"
