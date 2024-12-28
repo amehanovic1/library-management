@@ -40,6 +40,7 @@ export class BorrowBookComponent implements OnInit {
     console.log(this.borrow);
     this.borrowService.borrowBook(this.borrow).subscribe(data => {
       console.log(data);
+      this.getBooks();
     },
     error => console.log(error));
   }

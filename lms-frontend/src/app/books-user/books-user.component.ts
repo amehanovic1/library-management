@@ -5,11 +5,11 @@ import { BooksService } from '../_service/books.service';
 import { UsersService } from '../_service/users.service';
 
 @Component({
-  selector: 'app-books-list',
-  templateUrl: './books-list.component.html',
-  styleUrls: ['./books-list.component.css']
+  selector: 'app-books-user',
+  templateUrl: './books-user.component.html',
+  styleUrls: ['./books-user.component.css']
 })
-export class BooksListComponent implements OnInit {
+export class BooksUserComponent implements OnInit {
 
   books: Books[];
 
@@ -27,20 +27,6 @@ export class BooksListComponent implements OnInit {
     this.booksService.getBooksList().subscribe(data =>{
       this.books = data;
     });
-  }
-
-  updateBook(bookId: number) {
-    this.router.navigate(['update-book', bookId ]);
-  }
-
-  deleteBook(bookId: number) {
-    this.booksService.deleteBook(bookId).subscribe( data=> {
-      this.getBooks();
-    });
-  }
-
-  bookDetails(bookId: number) {
-    this.router.navigate(['book-details', bookId ]);
   }
 
 }

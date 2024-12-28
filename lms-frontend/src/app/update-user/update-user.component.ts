@@ -8,6 +8,7 @@ import { UsersService } from '../_service/users.service';
   templateUrl: './update-user.component.html',
   styleUrls: ['./update-user.component.css']
 })
+
 export class UpdateUserComponent implements OnInit {
 
   userId: number;

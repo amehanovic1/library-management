@@ -23,7 +23,7 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li
             class="nav-item"
-            *ngIf="isLoggedIn() && userService.roleMatch(['Admin'])"
+            *ngIf="isLoggedIn() && userService.roleMatch(['Admin', 'Staff'])"
           >
             <a
               routerLink="/books"
@@ -33,7 +33,21 @@
               Book List
             </a>
           </li>
-          <li class="nav-item" *ngIf="userService.roleMatch(['Admin'])">
+
+          <li
+            class="nav-item"
+            *ngIf="!isLoggedIn()"
+          >
+            <a
+              routerLink="/books-user"
+              routerLinkActive="active-link"
+              class="nav-link text-secondary fw-semibold"
+            >
+              Book List
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="userService.roleMatch(['Admin', 'Staff'])">
             <a
               routerLink="/create-book"
               routerLinkActive="active-link"
@@ -60,7 +74,7 @@
               Register User
             </a>
           </li>
-          <li class="nav-item" *ngIf="userService.roleMatch(['User'])">
+          <li class="nav-item" *ngIf="userService.roleMatch(['Member'])">
             <a
               routerLink="/borrow-book"
               routerLinkActive="active-link"
@@ -69,7 +83,7 @@
               Borrow Books
             </a>
           </li>
-          <li class="nav-item" *ngIf="userService.roleMatch(['User'])">
+          <li class="nav-item" *ngIf="userService.roleMatch(['Member'])">
             <a
               routerLink="/return-book"
               routerLinkActive="active-link"

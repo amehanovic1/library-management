@@ -42,4 +42,18 @@ export class UsersListComponent implements OnInit {
   updateUser(userId: number) {
     this.router.navigate(['update-user', userId]);
   }
+
+  deleteUser(userId: number) {
+    if (confirm("Are you sure you want to delete this user?")) {
+      this.usersService.deleteUser(userId).subscribe(
+        (response) => {
+          console.log(response);
+          this.getUsers(); // Reload the users list after deletion
+        },
+        (error) => {
+          console.error('Error deleting user:', error);
+        }
+      );
+    }
+  }
 }

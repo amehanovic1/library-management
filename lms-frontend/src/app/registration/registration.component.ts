@@ -17,7 +17,7 @@ export class RegistrationComponent implements OnInit {
 
   saveUser() {
     if (!this.user.role || this.user.role.length === 0) {
-      this.user.role = [{ roleName: 'User' }];
+      this.user.role = [{ roleName: 'Member' }];
     }
 
     this.usersService.createUser(this.user).subscribe(
@@ -36,11 +36,11 @@ export class RegistrationComponent implements OnInit {
 
   onSubmit() {
     if (!this.user.role || this.user.role.length === 0) {
-      this.user.role = [{ roleName: 'User' }];
+      this.user.role = [{ roleName: 'Member' }];
     }
 
     if (!this.user.role[0].roleName) {
-      this.user.role[0].roleName = 'User';
+      this.user.role[0].roleName = 'Member';
     }
 
     this.saveUser();
