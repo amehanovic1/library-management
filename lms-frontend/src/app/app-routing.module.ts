@@ -18,7 +18,7 @@ import { BooksUserComponent } from './books-user/books-user.component';
 
 const routes: Routes = [
   {path: 'books', component: BooksListComponent, canActivate:[AuthGuard], data:{roles:['Admin','Staff']}},
-  {path: 'books-user', component: BooksUserComponent},
+  {path: 'books-user', component: BooksUserComponent, canActivate:[AuthGuard], data:{roles:['Member']}},
   {path: 'create-book', component: CreateBookComponent, canActivate:[AuthGuard], data:{roles:['Admin','Staff']}},
   {path: '', component: HomeComponent},
   {path: 'update-book/:bookId', component: UpdateBookComponent, canActivate:[AuthGuard], data:{roles:['Admin','Staff']}},
